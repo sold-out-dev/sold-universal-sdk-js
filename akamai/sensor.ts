@@ -55,7 +55,7 @@ export async function generateSensorData(session: Session, input: SensorInput): 
 }> {
     const response = await sendRequest<SensorInput, IPayloadWithContextResponse>(
         session,
-        `${session.baseUrl}/v3/sensor`,
+        `${session.baseUrl}/v2/sensor`,
         input,
         (res) => {
             if (!res.payload) {

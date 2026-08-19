@@ -1,6 +1,6 @@
 {
   "name": "sold-universal-sdk-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript/JavaScript SDK for Akamai Bot Manager. Generate sensor data, pixel, sbsd and cookies without headless browsers.",
   "type": "module",
   "main": "index.js",
