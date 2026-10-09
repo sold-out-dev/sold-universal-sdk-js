@@ -129,9 +129,16 @@ const pixelData = await generatePixelData(session, new PixelInput(
 ```typescript
 import { SbsdInput, generateSbsdPayload } from 'sold-universal-sdk-js';
 
-const sbsdData = await generateSbsdPayload(session, new SbsdInput(
-    // sbsd input fields
+// First request: send the script, keep the returned context.
+const first = await generateSbsdPayload(session, new SbsdInput(
+    0, uuid, oCookie, pageUrl, userAgent, script, ip, acceptLanguage
 ));
+
+// Subsequent requests: send the context instead of the script.
+const next = await generateSbsdPayload(session, new SbsdInput(
+    1, uuid, oCookie, pageUrl, userAgent, "", ip, acceptLanguage, first.context
+));
+// first.payload / next.payload is the body to post to the sbsd endpoint
 ```
 
 ## 📄 License
