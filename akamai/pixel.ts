@@ -78,13 +78,28 @@ export function parsePixelScriptVar(src: string): string | null {
         return null;
     }
 
-    const rawStrings = /("[^",]*")/.exec(arrayDeclaration[1]);
+    // Every string of the array, not just the first match.
+    const rawStrings = arrayDeclaration[1].match(/"[^",]*"/g);
     if (rawStrings == null || index >= rawStrings.length) {
         return null;
     }
 
-    // Remove leading and trailing quotes
-    return rawStrings[index].replace(/^"|"$/g, "");
+    // Remove the quotes and decode the escapes ("\\x39\\x34..."): the
+    // challenge needs the value the browser reads, not the source text.
+    return unescapeJsString(rawStrings[index].slice(1, -1));
+}
+
+const jsSimpleEscapes: Record<string, string> = { n: "\n", r: "\r", t: "\t", b: "\b", f: "\f", v: "\v", "0": "\0" };
+
+/**
+ * Decodes the escape sequences of a JavaScript string literal body.
+ */
+function unescapeJsString(raw: string): string {
+    return raw.replace(/\\(x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|[\s\S])/g, (_, e: string) =>
+        (e[0] === "x" || e[0] === "u") && e.length > 1
+            ? String.fromCharCode(parseInt(e.slice(1), 16))
+            : jsSimpleEscapes[e] ?? e
+    );
 }
 
 /**

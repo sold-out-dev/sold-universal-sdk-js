@@ -42,7 +42,9 @@ export class CryptoChallenge {
         this.nonce = nonce;
         this.difficulty = difficulty;
         this.timeout = timeout;
-        this.count = count;
+        // A challenge without a `count` field expects ten answers: the original
+        // implementation always generated ten. (`new Array(undefined)` made it 1.)
+        this.count = count > 0 ? count : 10;
     }
 
     /**
